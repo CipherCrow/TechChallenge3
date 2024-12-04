@@ -2,6 +2,7 @@ package br.com.techchallenge.ratatouille.ratatouille.model;
 
 import br.com.techchallenge.ratatouille.ratatouille.model.enums.TipoDeCozinhaEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRestaurante;
 
+    @NotEmpty(message = "Nome não pode estar vazio!")
     private String nome;
 
     @OneToOne
