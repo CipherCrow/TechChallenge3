@@ -1,11 +1,10 @@
-package br.com.techchallenge.ratatouille.ratatouille.model;
+package br.com.techchallenge.ratatouille.ratatouille.model.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import br.com.techchallenge.ratatouille.ratatouille.model.enums.UsuarioStatusEnum;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Data
 @Entity
@@ -22,4 +21,7 @@ public class Usuario {
 
     private int idade;
     private String sexo;
+
+    @Enumerated(EnumType.STRING)
+    private UsuarioStatusEnum status = UsuarioStatusEnum.ATIVO;
 }

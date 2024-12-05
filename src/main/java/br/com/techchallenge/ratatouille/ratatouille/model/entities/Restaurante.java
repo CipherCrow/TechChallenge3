@@ -1,4 +1,4 @@
-package br.com.techchallenge.ratatouille.ratatouille.model;
+package br.com.techchallenge.ratatouille.ratatouille.model.entities;
 
 import br.com.techchallenge.ratatouille.ratatouille.model.enums.TipoDeCozinhaEnum;
 import jakarta.persistence.*;

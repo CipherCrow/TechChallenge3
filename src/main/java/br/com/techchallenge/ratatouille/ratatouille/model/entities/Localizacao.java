@@ -1,4 +1,4 @@
-package br.com.techchallenge.ratatouille.ratatouille.model;
+package br.com.techchallenge.ratatouille.ratatouille.model.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
