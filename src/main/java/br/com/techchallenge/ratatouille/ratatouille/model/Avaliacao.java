@@ -7,6 +7,7 @@ import lombok.Data;
 @Entity
 public class Avaliacao {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
