@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.model.entities;
 
+import br.com.techchallenge.ratatouille.ratatouille.model.enums.SexoUsuarioEnum;
 import br.com.techchallenge.ratatouille.ratatouille.model.enums.UsuarioStatusEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,9 +27,11 @@ public class Usuario {
     @NotEmpty(message = "Email deve ser preenchido!")
     private String email;
 
-    private int idade;
-    private String sexo;
+    private Integer idade;
 
     @Enumerated(EnumType.STRING)
-    private UsuarioStatusEnum status = UsuarioStatusEnum.ATIVO;
+    private SexoUsuarioEnum sexo;
+
+    @Enumerated(EnumType.STRING)
+    private UsuarioStatusEnum status;
 }

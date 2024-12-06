@@ -20,12 +20,8 @@ public class UsuarioService {
     private static String idNotNull = "ID não pode ser nulo";
 
     // Sonar Lint Detectou perigo de injeção
-    private UsuarioRepository usuarioRepository;
-
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    private UsuarioRepository usuarioRepository;
 
     public Usuario criarUsuario(UsuarioDTO usuarioDTO) {
         log.info("Criando usuário ID: {}",usuarioDTO.idUsuario());

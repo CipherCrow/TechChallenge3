@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.model.entitiesdto;
 
+import br.com.techchallenge.ratatouille.ratatouille.model.enums.SexoUsuarioEnum;
 import br.com.techchallenge.ratatouille.ratatouille.model.enums.UsuarioStatusEnum;
 
 public record UsuarioDTO (
@@ -7,6 +8,6 @@ public record UsuarioDTO (
         String nome,
         String email,
         int idade,
-        String sexo,
+        SexoUsuarioEnum sexo,
         UsuarioStatusEnum status
 ){}

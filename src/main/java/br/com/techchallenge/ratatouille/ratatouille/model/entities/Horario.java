@@ -30,4 +30,8 @@ public class Horario {
     @Column(nullable = false)
     @NotEmpty(message = "Deve existir quantidade de reservas!")
     private int espacosParaReserva;
+
+    @ManyToOne
+    @JoinColumn(name = "idRestaurante", nullable = false)
+    private Restaurante restaurante;
 }

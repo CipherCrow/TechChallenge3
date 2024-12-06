@@ -19,7 +19,6 @@ public class Restaurante {
     private String nome;
 
     @OneToOne
-    @Column(nullable = false)
     @JoinColumn(name = "tb_localizacao_id")
     private Localizacao localizacao;
 
@@ -30,6 +29,5 @@ public class Restaurante {
             mappedBy = "restaurante",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    @Column(nullable = false)
     private List<Horario> horariosDeFuncionamento;
 }

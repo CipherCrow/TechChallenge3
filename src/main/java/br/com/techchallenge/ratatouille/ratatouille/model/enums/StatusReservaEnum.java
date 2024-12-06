@@ -1,6 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.model.enums;
 
-public enum statusReservaEnum {
+public enum StatusReservaEnum {
     ATIVA,
     EXPIRADA,
     DISPONIVEL,
