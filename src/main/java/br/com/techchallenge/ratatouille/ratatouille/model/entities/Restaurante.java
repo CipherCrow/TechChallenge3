@@ -15,9 +15,11 @@ public class Restaurante {
     private Long idRestaurante;
 
     @NotEmpty(message = "Nome não pode estar vazio!")
+    @Column(nullable = false)
     private String nome;
 
     @OneToOne
+    @Column(nullable = false)
     @JoinColumn(name = "tb_localizacao_id")
     private Localizacao localizacao;
 
@@ -28,5 +30,6 @@ public class Restaurante {
             mappedBy = "restaurante",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @Column(nullable = false)
     private List<Horario> horariosDeFuncionamento;
 }
