@@ -1,4 +1,4 @@
-package br.com.techchallenge.ratatouille.ratatouille.model;
+package br.com.techchallenge.ratatouille.ratatouille.model.entities;
 
 import br.com.techchallenge.ratatouille.ratatouille.model.enums.TipoDeCozinhaEnum;
 import jakarta.persistence.*;
@@ -15,10 +15,11 @@ public class Restaurante {
     private Long idRestaurante;
 
     @NotEmpty(message = "Nome não pode estar vazio!")
+    @Column(nullable = false)
     private String nome;
 
     @OneToOne
-    @JoinColumn(name = "tb_localizacao_id")
+    @JoinColumn(name = "idLocalizacao", nullable = false)
     private Localizacao localizacao;
 
     @Enumerated(EnumType.STRING)
