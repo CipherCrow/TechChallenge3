@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.exceptions.QuantidadeDeReservasException;
 import br.com.techchallenge.ratatouille.ratatouille.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.model.entities.Horario;
 import br.com.techchallenge.ratatouille.ratatouille.model.entitiesdto.HorarioDTO;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Service
@@ -42,30 +45,44 @@ public class HorarioService {
                 .orElseThrow(() -> new RegistroNotFoundException("Horario",idHorario));
     }
 
-    public Horario atualizarHorarios(HorarioDTO horarioDTO) {
-        Objects.requireNonNull(horarioDTO.idHorario(), idNotNull);
+    public Horario atualizarHorario(Long idHorario, LocalDate dataHorario, LocalTime horaInicio, LocalTime horaFim) {
+        Objects.requireNonNull(idHorario, idNotNull);
 
-        Horario horario = this.buscarPeloId(horarioDTO.idHorario());
-        horario.setHoraFim(horarioDTO.horaFim());
-        horario.setHoraInicio(horarioDTO.horaInicio());
-        horario.setData(horarioDTO.data());
-
-        return horarioRepository.save(horario);
-    }
-
-    public Horario atualizarQuantidadeDeReservas(HorarioDTO horarioDTO) {
-        Objects.requireNonNull(horarioDTO.idHorario(), idNotNull);
-
-        Horario horario = this.buscarPeloId(horarioDTO.idHorario());
-        horario.setHoraFim(horarioDTO.horaFim());
-        horario.setHoraInicio(horarioDTO.horaInicio());
-        horario.setData(horarioDTO.data());
+        Horario horario = this.buscarPeloId(idHorario);
+        horario.setHoraFim(horaFim);
+        horario.setHoraInicio(horaInicio);
+        horario.setData(dataHorario);
 
         return horarioRepository.save(horario);
     }
 
-    public void deletarPeloId(Long idUsuario) {
-        Objects.requireNonNull(idUsuario, idNotNull);
-        horarioRepository.deleteById(idUsuario);
+    public Horario atualizarQuantidadeDeReservas(Long idHorario,Integer qtdReservasDesejado) {
+        Objects.requireNonNull(idHorario, idNotNull);
+
+        Horario horario = this.buscarPeloId(idHorario);
+
+        Integer jaReservados = horario.getQtdReservados();
+
+        if(qtdReservasDesejado <= jaReservados){
+            throw new QuantidadeDeReservasException
+                    ("Não é possível alterar numero de reservas para " + qtdReservasDesejado
+                            + " pois já existem [" + jaReservados + "] reservadas realizadas!");
+        }
+
+        horario.setEspacosParaReserva(qtdReservasDesejado);
+        return horarioRepository.save(horario);
+    }
+
+    public void deletarPeloId(Long idHorario) {
+        Objects.requireNonNull(idHorario, idNotNull);
+
+        Horario horario = this.buscarPeloId(idHorario);
+
+        if(horario.getQtdReservados() != 0){
+            throw new QuantidadeDeReservasException
+                    ("Não é possível deletar horarios que já possuem reservas ativas");
+        }
+
+        horarioRepository.deleteById(idHorario);
     }
 }
