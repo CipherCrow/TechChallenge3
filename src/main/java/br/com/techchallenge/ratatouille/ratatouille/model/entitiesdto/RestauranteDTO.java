@@ -6,10 +6,10 @@ import br.com.techchallenge.ratatouille.ratatouille.model.enums.TipoDeCozinhaEnu
 
 import java.util.List;
 
-public record RestauranteDTO (
+public record RestauranteDTO(
     Long idRestaurante,
     String nome,
     Localizacao localizacao,
-    TipoDeCozinhaEnum tipoDeCozinha,
+    TipoDeCozinhaEnum tipoDeCozinhaEnum,
     List<Horario> horariosDeFuncionamento
 ){}

@@ -1,10 +1,13 @@
 package br.com.techchallenge.ratatouille.ratatouille.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.exceptions.QuantidadeDeReservasException;
 import br.com.techchallenge.ratatouille.ratatouille.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.model.entities.Horario;
+import br.com.techchallenge.ratatouille.ratatouille.model.entities.Restaurante;
 import br.com.techchallenge.ratatouille.ratatouille.model.entitiesdto.HorarioDTO;
 import br.com.techchallenge.ratatouille.ratatouille.repository.HorarioRepository;
+import br.com.techchallenge.ratatouille.ratatouille.repository.RestauranteRepository;
 import br.com.techchallenge.ratatouille.ratatouille.service.mapper.HorarioMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,23 +21,29 @@ import java.util.Objects;
 @Service
 public class HorarioService {
 
-    private static final Logger log = LoggerFactory.getLogger(HorarioService.class);
     private static String idNotNull = "ID não pode ser nulo";
 
     // Sonar Lint Detectou perigo de injeção
     @Autowired
     private HorarioRepository horarioRepository;
 
-    public Horario criar(HorarioDTO horarioDTO) {
-        log.info("Criando Horário ID: {}", horarioDTO.idHorario());
-        Long parametroID = horarioDTO.idHorario();
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
-        if (horarioRepository.existsById(parametroID)) {
-            log.info("ID ja existe. ID: {}", parametroID);
-            throw new IllegalArgumentException("ID já existe");
+    public Horario adicionarHorarioDeFuncionamentoAoRestaurante(Long restauranteId, HorarioDTO horariodto) {
+        // Buscar o restaurante
+        Restaurante restaurante = restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new RegistroNotFoundException("Restaurante", restauranteId));
+
+        if(horarioRepository.existsById(horariodto.idHorario())){
+            new IdJaExistenteException("Id do Horario já existente!");
         }
 
-        Horario horario = HorarioMapper.toEntity(horarioDTO);
+        // Associar o restaurante ao horário
+        Horario horario = HorarioMapper.toEntity(horariodto);
+        horario.setRestaurante(restaurante);
+
+        // Salvar o horário
         return horarioRepository.save(horario);
     }
 

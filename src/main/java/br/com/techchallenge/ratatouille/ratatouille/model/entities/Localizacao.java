@@ -29,8 +29,8 @@ public class Localizacao {
 
     @Column(nullable = false)
     @NotEmpty(message = "Rua não pode estar vazio!")
-
     private String rua;
+
     @Column(nullable = false)
     @NotEmpty(message = "Numero não pode estar vazio!")
     private String numero;

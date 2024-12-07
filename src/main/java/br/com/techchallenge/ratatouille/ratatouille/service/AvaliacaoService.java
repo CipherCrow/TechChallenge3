@@ -42,16 +42,4 @@ public class AvaliacaoService {
                 .orElseThrow(() -> new RegistroNotFoundException("Avaliacao",idAvaliacao));
     }
 
-    public List<Avaliacao> buscarListaAvaliacoesDoUsuario(Long idUsuario) {
-        Objects.requireNonNull(idUsuario, idNotNull);
-
-        return avaliacaoRepository.findByUsuario_IdUsuario(idUsuario);
-    }
-
-    public List<Avaliacao> buscarListaAvaliacoesDoRestaurante(Long idRestaurante) {
-        Objects.requireNonNull(idRestaurante, idNotNull);
-
-        return avaliacaoRepository.findByRestaurante_IdRestaurante(idRestaurante);
-    }
-
 }

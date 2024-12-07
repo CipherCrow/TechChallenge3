@@ -1,9 +1,12 @@
 package br.com.techchallenge.ratatouille.ratatouille.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.exceptions.RegistroNotFoundException;
+import br.com.techchallenge.ratatouille.ratatouille.model.entities.Horario;
 import br.com.techchallenge.ratatouille.ratatouille.model.entities.Reserva;
 import br.com.techchallenge.ratatouille.ratatouille.model.entitiesdto.ReservaDTO;
 import br.com.techchallenge.ratatouille.ratatouille.model.enums.StatusReservaEnum;
+import br.com.techchallenge.ratatouille.ratatouille.repository.HorarioRepository;
 import br.com.techchallenge.ratatouille.ratatouille.repository.ReservaRepository;
 import br.com.techchallenge.ratatouille.ratatouille.service.mapper.ReservaMapper;
 import org.slf4j.Logger;
@@ -23,16 +26,22 @@ public class ReservaService {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    public Reserva criar(ReservaDTO reservaDTO) {
-        log.info("Criando reserva ID: {}",reservaDTO.idReserva());
-        Long parametroID = reservaDTO.idReserva();
+    @Autowired
+    private HorarioRepository horarioRepository;
 
-        if (reservaRepository.existsById(parametroID)) {
-            log.info("ID ja existe. ID: {}", parametroID);
-            throw new IllegalArgumentException("ID já existe");
+    public Reserva adicionarReservaParaHorario(Long idHorario,ReservaDTO reservaDTO) {
+        // Buscar o Horario
+        Horario horario = horarioRepository.findById(idHorario)
+                .orElseThrow(() -> new RegistroNotFoundException("Horario", idHorario));
+
+        if(reservaRepository.existsById(reservaDTO.idReserva())){
+            new IdJaExistenteException("Id da reserva já existente!");
         }
 
+        // Associar o horario á reserva
         Reserva reserva = ReservaMapper.toEntity(reservaDTO);
+        reserva.setHorario(horario);
+
         return reservaRepository.save(reserva);
     }
 
