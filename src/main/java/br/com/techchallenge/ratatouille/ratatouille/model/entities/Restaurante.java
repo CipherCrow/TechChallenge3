@@ -19,7 +19,7 @@ public class Restaurante {
     private String nome;
 
     @OneToOne
-    @JoinColumn(name = "tb_localizacao_id")
+    @JoinColumn(name = "idLocalizacao", nullable = false)
     private Localizacao localizacao;
 
     @Enumerated(EnumType.STRING)

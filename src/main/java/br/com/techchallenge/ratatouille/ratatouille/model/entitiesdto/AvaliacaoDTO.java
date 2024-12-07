@@ -4,9 +4,9 @@ import br.com.techchallenge.ratatouille.ratatouille.model.entities.Restaurante;
 import br.com.techchallenge.ratatouille.ratatouille.model.entities.Usuario;
 
 public record AvaliacaoDTO (
-    Long id,
+    Long idAvaliacao,
     Restaurante restaurante,
     String comentario,
-    int estrelas,
+    Integer estrelas,
     Usuario usuario
 ){}

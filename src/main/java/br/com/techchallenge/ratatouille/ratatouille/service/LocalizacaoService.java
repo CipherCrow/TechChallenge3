@@ -21,7 +21,7 @@ public class LocalizacaoService {
     @Autowired
     private LocalizacaoRepository localizacaoRepository;
 
-    public Localizacao criarLocalizacao(LocalizacaoDTO localizacaoDTO) {
+    public Localizacao criar(LocalizacaoDTO localizacaoDTO) {
         log.info("Criando localizacao ID: {}",localizacaoDTO.idLocalizacao());
         Long parametroID = localizacaoDTO.idLocalizacao();
 
@@ -30,21 +30,21 @@ public class LocalizacaoService {
             throw new IllegalArgumentException("ID já existe");
         }
 
-        Localizacao Localizacao = LocalizacaoMapper.toEntity(localizacaoDTO);
-        return localizacaoRepository.save(Localizacao);
+        Localizacao localizacao = LocalizacaoMapper.toEntity(localizacaoDTO);
+        return localizacaoRepository.save(localizacao);
     }
 
-    public Localizacao buscarLocalizacao(Long idLocalizacao) {
+    public Localizacao buscarPeloId(Long idLocalizacao) {
         Objects.requireNonNull(idLocalizacao, idNotNull);
 
         return localizacaoRepository.findById(idLocalizacao)
                 .orElseThrow(() -> new RegistroNotFoundException("Localização",idLocalizacao));
     }
 
-    public Localizacao atualizarLocalizacao(LocalizacaoDTO localizacaoDTO) {
+    public Localizacao atualizar(LocalizacaoDTO localizacaoDTO) {
         Objects.requireNonNull(localizacaoDTO.idLocalizacao(), idNotNull);
 
-        Localizacao localizacao = this.buscarLocalizacao(localizacaoDTO.idLocalizacao());
+        Localizacao localizacao = this.buscarPeloId(localizacaoDTO.idLocalizacao());
         localizacao.setRua(localizacaoDTO.rua());
         localizacao.setCidade(localizacaoDTO.cidade());
         localizacao.setEstado(localizacaoDTO.estado());

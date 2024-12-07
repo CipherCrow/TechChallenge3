@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,10 +30,23 @@ public class Horario {
     private LocalTime horaFim;
 
     @Column(nullable = false)
+    @NotEmpty(message = "Deve existir uma data!")
+    private LocalDate data;
+
+    @Column(nullable = false)
     @NotEmpty(message = "Deve existir quantidade de reservas!")
     private int espacosParaReserva;
+
+    @Column(nullable = false)
+    private int qtdReservados;
 
     @ManyToOne
     @JoinColumn(name = "idRestaurante", nullable = false)
     private Restaurante restaurante;
+
+    @OneToMany(
+            mappedBy = "horario",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Reserva> reservas;
 }
