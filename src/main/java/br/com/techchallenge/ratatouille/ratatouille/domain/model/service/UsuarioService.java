@@ -44,10 +44,10 @@ public class UsuarioService {
                 .orElseThrow(() -> new RegistroNotFoundException("Usuário",idUsuario));
     }
 
-    public Usuario atualizar(UsuarioDTO usuarioDTO) {
-        Objects.requireNonNull(usuarioDTO.idUsuario(), idNotNull);
+    public Usuario atualizar(Long idUsuario,UsuarioDTO usuarioDTO) {
+        Objects.requireNonNull(idUsuario, idNotNull);
 
-        Usuario usuario = this.buscarPeloId(usuarioDTO.idUsuario());
+        Usuario usuario = this.buscarPeloId(idUsuario);
         usuario.setNome(usuarioDTO.nome());
         usuario.setEmail(usuarioDTO.email());
         usuario.setIdade(usuarioDTO.idade());
