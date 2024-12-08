@@ -63,7 +63,7 @@ public class HorarioService {
         return horarioRepository.save(horario);
     }
 
-    public Horario atualizarQuantidadeDeReservas(Long idHorario,Integer qtdReservasDesejado) {
+    public Horario atualizarQuantidadeDeReservasMaximas(Long idHorario, Integer qtdReservasDesejado) {
         Objects.requireNonNull(idHorario, idNotNull);
 
         Horario horario = this.buscarPeloId(idHorario);
@@ -77,6 +77,22 @@ public class HorarioService {
         }
 
         horario.setEspacosParaReserva(qtdReservasDesejado);
+        return horarioRepository.save(horario);
+    }
+
+    public Horario incrementaQuantidadeReservas(Long idHorario) {
+        Objects.requireNonNull(idHorario, idNotNull);
+
+        Horario horario = this.buscarPeloId(idHorario);
+        horario.setQtdReservados(horario.getQtdReservados() + 1);
+        return horarioRepository.save(horario);
+    }
+
+    public Horario decrementaQuantidadeReservas(Long idHorario) {
+        Objects.requireNonNull(idHorario, idNotNull);
+
+        Horario horario = this.buscarPeloId(idHorario);
+        horario.setQtdReservados(horario.getQtdReservados() - 1);
         return horarioRepository.save(horario);
     }
 
