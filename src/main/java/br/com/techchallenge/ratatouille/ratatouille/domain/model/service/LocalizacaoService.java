@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Localizacao;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.LocalizacaoDTO;
@@ -27,7 +28,7 @@ public class LocalizacaoService {
 
         if (localizacaoRepository.existsById(parametroID)) {
             log.info("ID ja existe. ID: {}", parametroID);
-            throw new IllegalArgumentException("ID já existe");
+            throw new IdJaExistenteException("Id da localizacao já existente!");
         }
 
         Localizacao localizacao = LocalizacaoMapper.toEntity(localizacaoDTO);

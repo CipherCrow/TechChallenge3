@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Usuario;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.UsuarioDTO;
@@ -29,7 +30,7 @@ public class UsuarioService {
 
         if (usuarioRepository.existsById(parametroID)) {
             log.info("ID ja existe. ID: {}", parametroID);
-            throw new IllegalArgumentException("ID já existe");
+            throw new IdJaExistenteException("Id do usuario já existente!");
         }
 
         Usuario usuario = UsuarioMapper.toEntity(usuarioDTO);

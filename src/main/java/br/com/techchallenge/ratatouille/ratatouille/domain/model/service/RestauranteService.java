@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Localizacao;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Restaurante;
@@ -29,7 +30,7 @@ public class RestauranteService {
 
         if (restauranteRepository.existsById(parametroID)) {
             log.info("ID ja existe. ID: {}", parametroID);
-            throw new IllegalArgumentException("ID já existe");
+            throw new IdJaExistenteException("Id do restaurante já existente!");
         }
 
         Restaurante restaurante = RestauranteMapper.toEntity(restauranteDTO);
