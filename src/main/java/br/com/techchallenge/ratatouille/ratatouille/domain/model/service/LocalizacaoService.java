@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Localizacao;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.LocalizacaoDTO;
@@ -27,7 +28,7 @@ public class LocalizacaoService {
 
         if (localizacaoRepository.existsById(parametroID)) {
             log.info("ID ja existe. ID: {}", parametroID);
-            throw new IllegalArgumentException("ID já existe");
+            throw new IdJaExistenteException("Id da localizacao já existente!");
         }
 
         Localizacao localizacao = LocalizacaoMapper.toEntity(localizacaoDTO);
@@ -45,11 +46,21 @@ public class LocalizacaoService {
         Objects.requireNonNull(localizacaoDTO.idLocalizacao(), idNotNull);
 
         Localizacao localizacao = this.buscarPeloId(localizacaoDTO.idLocalizacao());
-        localizacao.setRua(localizacaoDTO.rua());
-        localizacao.setCidade(localizacaoDTO.cidade());
-        localizacao.setEstado(localizacaoDTO.estado());
-        localizacao.setNumero(localizacaoDTO.numero());
-        localizacao.setBairro(localizacaoDTO.bairro());
+        if(localizacaoDTO.rua() != null){
+            localizacao.setRua(localizacaoDTO.rua());
+        }
+        if(localizacaoDTO.cidade() != null){
+            localizacao.setCidade(localizacaoDTO.cidade());
+        }
+        if(localizacaoDTO.estado() != null){
+            localizacao.setEstado(localizacaoDTO.estado());
+        }
+        if(localizacaoDTO.numero() != null){
+            localizacao.setNumero(localizacaoDTO.numero());
+        }
+        if(localizacaoDTO.bairro() != null){
+            localizacao.setBairro(localizacaoDTO.bairro());
+        }
 
         return localizacaoRepository.save(localizacao);
     }

@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Usuario;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.UsuarioDTO;
@@ -29,7 +30,7 @@ public class UsuarioService {
 
         if (usuarioRepository.existsById(parametroID)) {
             log.info("ID ja existe. ID: {}", parametroID);
-            throw new IllegalArgumentException("ID já existe");
+            throw new IdJaExistenteException("Id do usuario já existente!");
         }
 
         Usuario usuario = UsuarioMapper.toEntity(usuarioDTO);
@@ -43,15 +44,22 @@ public class UsuarioService {
                 .orElseThrow(() -> new RegistroNotFoundException("Usuário",idUsuario));
     }
 
-    public Usuario atualizar(UsuarioDTO usuarioDTO) {
-        Objects.requireNonNull(usuarioDTO.idUsuario(), idNotNull);
+    public Usuario atualizar(Long idUsuario,UsuarioDTO usuarioDTO) {
+        Objects.requireNonNull(idUsuario, idNotNull);
 
-        Usuario usuario = this.buscarPeloId(usuarioDTO.idUsuario());
-        usuario.setNome(usuarioDTO.nome());
-        usuario.setEmail(usuarioDTO.email());
-        usuario.setIdade(usuarioDTO.idade());
-        usuario.setSexo(usuarioDTO.sexo());
-
+        Usuario usuario = this.buscarPeloId(idUsuario);
+        if (usuarioDTO.nome() != null){
+            usuario.setNome(usuarioDTO.nome());
+        }
+        if (usuarioDTO.email() != null){
+            usuario.setEmail(usuarioDTO.email());
+        }
+        if(usuarioDTO.idade() != null ){
+            usuario.setIdade(usuarioDTO.idade());
+        }
+        if(usuarioDTO.sexo() != null ){
+            usuario.setSexo(usuarioDTO.sexo());
+        }
         return usuarioRepository.save(usuario);
     }
 
