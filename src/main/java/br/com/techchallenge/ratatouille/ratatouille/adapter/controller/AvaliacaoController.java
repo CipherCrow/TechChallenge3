@@ -3,6 +3,7 @@ package br.com.techchallenge.ratatouille.ratatouille.adapter.controller;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.AvaliacaoDTO;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegraDeNegocioException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.AvaliacaoMapper;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Avaliacao;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.AvaliacaoService;
@@ -31,7 +32,10 @@ public class AvaliacaoController {
                                                                 avaliacaoDTO);
             return ResponseEntity.status(HttpStatus.CREATED).
                     body(AvaliacaoMapper.toDTO(avaliacaoCriada));
-        }catch(IdJaExistenteException | RegistroNotFoundException | NullPointerException e ){
+        }catch(IdJaExistenteException |
+               RegistroNotFoundException |
+               NullPointerException |
+               RegraDeNegocioException e  ){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
