@@ -33,7 +33,14 @@ public class UsuarioService {
             throw new IdJaExistenteException("Id do usuario já existente!");
         }
 
-        Usuario usuario = UsuarioMapper.toEntity(usuarioDTO);
+        Usuario usuario = Usuario.builder()
+                .nome(usuarioDTO.nome())
+                .email(usuarioDTO.email())
+                .idade(usuarioDTO.idade())
+                .sexo(usuarioDTO.sexo())
+                .status(UsuarioStatusEnum.ATIVO)
+                .build();
+
         return usuarioRepository.save(usuario);
     }
 
