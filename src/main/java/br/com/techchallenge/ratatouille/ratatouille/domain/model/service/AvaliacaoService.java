@@ -2,6 +2,7 @@ package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegraDeNegocioException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Avaliacao;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.AvaliacaoDTO;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Restaurante;
@@ -37,6 +38,10 @@ public class AvaliacaoService {
 
         if (avaliacaoRepository.existsById(avaliacaoDTO.idAvaliacao())) {
             throw new IdJaExistenteException("Id da avaliacao já existente!");
+        }
+
+        if(avaliacaoDTO.estrelas() > 5 || avaliacaoDTO.estrelas() < 0 ){
+            throw new RegraDeNegocioException("Deve ser dado de 1 à 5 estrelas de avaliação!");
         }
 
         Restaurante restaurante = restauranteService.buscarPeloId(idRestaurante);

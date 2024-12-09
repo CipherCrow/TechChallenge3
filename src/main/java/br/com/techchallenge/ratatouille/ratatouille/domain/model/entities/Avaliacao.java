@@ -22,7 +22,7 @@ public class Avaliacao {
     private Restaurante restaurante;
 
     private String comentario;
-    @NotNull(message = "Ao menos 1 estrela deve ser dada!")
+    @NotNull(message = "Entre 1 à 5 estrelas devem ser dadas!")
     private Integer estrelas;
 
     @OneToOne
