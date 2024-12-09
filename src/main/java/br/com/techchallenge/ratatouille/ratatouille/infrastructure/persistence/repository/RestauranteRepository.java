@@ -25,5 +25,5 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
             @Param("bairro") String bairro,
             @Param("rua") String rua);
 
-    List<Restaurante> findByNome(String nome);
+    List<Restaurante> findByNomeLike(String nome);
 }

@@ -72,7 +72,7 @@ public class ReservaService {
         Objects.requireNonNull(idHorario, idNotNull);
         Objects.requireNonNull(status, idNotNull);
 
-        return reservaRepository.findReservasByHorario_IdAndHorarioAndStatus(idHorario, status.name());
+        return reservaRepository.findReservasByHorario_IdHorarioAndStatus(idHorario, status.name());
     }
 
     /***
