@@ -46,11 +46,21 @@ public class LocalizacaoService {
         Objects.requireNonNull(localizacaoDTO.idLocalizacao(), idNotNull);
 
         Localizacao localizacao = this.buscarPeloId(localizacaoDTO.idLocalizacao());
-        localizacao.setRua(localizacaoDTO.rua());
-        localizacao.setCidade(localizacaoDTO.cidade());
-        localizacao.setEstado(localizacaoDTO.estado());
-        localizacao.setNumero(localizacaoDTO.numero());
-        localizacao.setBairro(localizacaoDTO.bairro());
+        if(localizacaoDTO.rua() != null){
+            localizacao.setRua(localizacaoDTO.rua());
+        }
+        if(localizacaoDTO.cidade() != null){
+            localizacao.setCidade(localizacaoDTO.cidade());
+        }
+        if(localizacaoDTO.estado() != null){
+            localizacao.setEstado(localizacaoDTO.estado());
+        }
+        if(localizacaoDTO.numero() != null){
+            localizacao.setNumero(localizacaoDTO.numero());
+        }
+        if(localizacaoDTO.bairro() != null){
+            localizacao.setBairro(localizacaoDTO.bairro());
+        }
 
         return localizacaoRepository.save(localizacao);
     }

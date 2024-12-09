@@ -48,11 +48,18 @@ public class UsuarioService {
         Objects.requireNonNull(idUsuario, idNotNull);
 
         Usuario usuario = this.buscarPeloId(idUsuario);
-        usuario.setNome(usuarioDTO.nome());
-        usuario.setEmail(usuarioDTO.email());
-        usuario.setIdade(usuarioDTO.idade());
-        usuario.setSexo(usuarioDTO.sexo());
-
+        if (usuarioDTO.nome() != null){
+            usuario.setNome(usuarioDTO.nome());
+        }
+        if (usuarioDTO.email() != null){
+            usuario.setEmail(usuarioDTO.email());
+        }
+        if(usuarioDTO.idade() != null ){
+            usuario.setIdade(usuarioDTO.idade());
+        }
+        if(usuarioDTO.sexo() != null ){
+            usuario.setSexo(usuarioDTO.sexo());
+        }
         return usuarioRepository.save(usuario);
     }
 

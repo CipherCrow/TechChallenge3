@@ -7,7 +7,7 @@ public record UsuarioDTO (
         Long idUsuario,
         String nome,
         String email,
-        int idade,
+        Integer idade,
         SexoUsuarioEnum sexo,
         UsuarioStatusEnum status
 ){}
