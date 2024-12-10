@@ -8,6 +8,7 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.ReservaMapper
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Reserva;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.StatusReservaEnum;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.ReservaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ReservaController {
 
     @PostMapping("/realizarReserva/{idHorario}")
     public ResponseEntity<Object> realizarReserva(@PathVariable Long idHorario,
-                                                  @RequestBody ReservaDTO reservaDTO) {
+                                                  @Valid @RequestBody ReservaDTO reservaDTO) {
         try{
             Reserva reservaCriada = reservaService.adicionarReservaParaHorario(idHorario,reservaDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(ReservaMapper.toDTO(reservaCriada));

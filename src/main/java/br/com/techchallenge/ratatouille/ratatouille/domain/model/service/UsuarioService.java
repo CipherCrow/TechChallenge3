@@ -26,6 +26,8 @@ public class UsuarioService {
 
     public Usuario criar(UsuarioDTO usuarioDTO) {
         log.info("Criando usuário ID: {}",usuarioDTO.idUsuario());
+        Objects.requireNonNull(usuarioDTO.idUsuario());
+
         Long parametroID = usuarioDTO.idUsuario();
 
         if (usuarioRepository.existsById(parametroID)) {

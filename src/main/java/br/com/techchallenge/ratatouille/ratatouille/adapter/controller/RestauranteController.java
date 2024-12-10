@@ -12,6 +12,7 @@ import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Restau
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.HorarioService;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.LocalizacaoService;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.RestauranteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class RestauranteController {
     HorarioService horarioService;
 
     @PostMapping("/cadastrarRestaurante")
-    public ResponseEntity<Object> criarRestaurante(@RequestBody RestauranteDTO restauranteDTO) {
+    public ResponseEntity<Object> criarRestaurante(@Valid @RequestBody RestauranteDTO restauranteDTO) {
         try{
             Restaurante restauranteCadastrado = restauranteService.criar(restauranteDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(RestauranteMapper.toDTO(restauranteCadastrado));
@@ -68,7 +69,7 @@ public class RestauranteController {
     }
 
     @GetMapping("/buscarRestaurantePorLocalizacao")
-    public ResponseEntity<Object> encontrarRestaurantePorLocalizacao(@RequestBody LocalizacaoDTO localizacaoDTO) {
+    public ResponseEntity<Object> encontrarRestaurantePorLocalizacao(@Valid @RequestBody LocalizacaoDTO localizacaoDTO) {
         try{
             List<Restaurante> restaurantesEncontrados = restauranteService.buscarPelaLocalizacao(localizacaoDTO);
             return ResponseEntity.status(HttpStatus.FOUND).body(restaurantesEncontrados);
@@ -81,7 +82,7 @@ public class RestauranteController {
 
     @PutMapping("/atualizarDadosRestaurante/{id}")
     public ResponseEntity<Object> atualizarRestaurante(@PathVariable Long id,
-                                                       @RequestBody RestauranteDTO restauranteDTO) {
+                                                       @Valid @RequestBody RestauranteDTO restauranteDTO) {
         try{
             Restaurante restauranteAtualizado =
                     restauranteService.atualizarDados(id,
@@ -98,7 +99,7 @@ public class RestauranteController {
 
     @PutMapping("/atualizarLocalizacaoRestaurante/{id}")
     public ResponseEntity<Object> atualizarLocalizacao(@PathVariable Long id,
-                                                       @RequestBody LocalizacaoDTO localizacaoDTO) {
+                                                       @Valid  @RequestBody LocalizacaoDTO localizacaoDTO) {
         try{
             Restaurante restauranteAtualizado =
                     restauranteService.atualizarLocalizacao(id,localizacaoDTO);
@@ -112,7 +113,7 @@ public class RestauranteController {
 
     @PostMapping("/adicionarHorario/{id}")
     public ResponseEntity<Object> adicionarHorario(@PathVariable Long id,
-                                                   @RequestBody HorarioDTO horarioDTO){
+                                                   @Valid @RequestBody HorarioDTO horarioDTO){
         try{
             Horario horarioAdicionado = horarioService.adicionarHorarioDeFuncionamentoAoRestaurante(id,horarioDTO);
             return ResponseEntity.status(HttpStatus.OK).body(HorarioMapper.toDTO(horarioAdicionado));
@@ -137,7 +138,7 @@ public class RestauranteController {
 
     @PutMapping("/atualizarHorario/{id}")
     public ResponseEntity<Object> atualizarHorario(@PathVariable Long id,
-                                                   @RequestBody HorarioDTO horarioDTO){
+                                                   @Valid @RequestBody HorarioDTO horarioDTO){
         try{
             Horario horarioAtualizado = horarioService.atualizarHorario(id,horarioDTO);
             return ResponseEntity.status(HttpStatus.OK).body(HorarioMapper.toDTO(horarioAtualizado));
@@ -150,7 +151,7 @@ public class RestauranteController {
 
     @PutMapping("/atualizarCapacidadeDeReservasNoHorario/{id}")
     public ResponseEntity<Object> atualizarCapacidadeHorario(@PathVariable Long id,
-                                                   @RequestParam Integer capacidade){
+                                                             @RequestParam Integer capacidade){
         try{
             Horario horarioAtualizado = horarioService.atualizarQuantidadeDeReservasMaximas(id,capacidade);
             return ResponseEntity.status(HttpStatus.OK).body(HorarioMapper.toDTO(horarioAtualizado));
