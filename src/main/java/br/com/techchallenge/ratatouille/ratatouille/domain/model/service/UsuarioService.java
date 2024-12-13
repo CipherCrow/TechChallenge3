@@ -7,8 +7,6 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.UsuarioDTO;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.UsuarioStatusEnum;
 import br.com.techchallenge.ratatouille.ratatouille.infrastructure.persistence.repository.UsuarioRepository;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.UsuarioMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +15,6 @@ import java.util.Objects;
 @Service
 public class UsuarioService {
 
-    private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
     private static String idNotNull = "ID não pode ser nulo";
 
     // Sonar Lint Detectou perigo de injeção
@@ -25,23 +22,13 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public Usuario criar(UsuarioDTO usuarioDTO) {
-        log.info("Criando usuário ID: {}",usuarioDTO.idUsuario());
-        Objects.requireNonNull(usuarioDTO.idUsuario());
-
         Long parametroID = usuarioDTO.idUsuario();
 
         if (usuarioRepository.existsById(parametroID)) {
-            log.info("ID ja existe. ID: {}", parametroID);
             throw new IdJaExistenteException("Id do usuario já existente!");
         }
 
-        Usuario usuario = Usuario.builder()
-                .nome(usuarioDTO.nome())
-                .email(usuarioDTO.email())
-                .idade(usuarioDTO.idade())
-                .sexo(usuarioDTO.sexo())
-                .status(UsuarioStatusEnum.ATIVO)
-                .build();
+        Usuario usuario = UsuarioMapper.toEntity(usuarioDTO);
 
         return usuarioRepository.save(usuario);
     }
