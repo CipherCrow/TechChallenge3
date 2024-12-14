@@ -24,7 +24,7 @@ public class ReservaServiceImpl implements  ReservaService {
     private final ReservaRepository reservaRepository;
 
     @Autowired
-    private HorarioService horarioService;
+    private final HorarioService horarioService;
 
     public Reserva adicionarReservaParaHorario(Long idHorario,Reserva reservaParam) {
         Objects.requireNonNull(idHorario, idNotNull);

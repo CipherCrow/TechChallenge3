@@ -22,7 +22,7 @@ public class RestauranteServiceImpl implements RestauranteService{
     private final RestauranteRepository restauranteRepository;
 
     @Autowired
-    private LocalizacaoService localizacaoService;
+    private final LocalizacaoService localizacaoService;
 
     public Restaurante criar(Restaurante restauranteParam) {
         if (restauranteRepository.existsById(restauranteParam.getIdRestaurante())) {

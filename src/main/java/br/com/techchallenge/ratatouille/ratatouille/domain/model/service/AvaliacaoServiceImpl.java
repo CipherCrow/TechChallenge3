@@ -1,16 +1,13 @@
 package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
-import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.AvaliacaoDTO;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegraDeNegocioException;
-import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.AvaliacaoMapper;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Avaliacao;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Restaurante;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Usuario;
 import br.com.techchallenge.ratatouille.ratatouille.infrastructure.persistence.repository.AvaliacaoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,11 +21,9 @@ public class AvaliacaoServiceImpl implements AvaliacaoService{
 
     private final AvaliacaoRepository avaliacaoRepository;
 
-    @Autowired
-    private RestauranteService restauranteService;
+    private final RestauranteService restauranteService;
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     public Avaliacao criar(Long idRestaurante, Long idUsuario, Avaliacao avaliacaoParam) {
         Objects.requireNonNull(idRestaurante);
@@ -46,10 +41,9 @@ public class AvaliacaoServiceImpl implements AvaliacaoService{
         Restaurante restaurante = restauranteService.buscarPeloId(idRestaurante);
         Usuario usuario = usuarioService.buscarPeloId(idUsuario);
 
-        Avaliacao avaliacao = this.buscarPeloId(avaliacaoParam.getIdAvaliacao());
-        avaliacao.setRestaurante(restaurante);
-        avaliacao.setUsuario(usuario);
-        return avaliacaoRepository.save(avaliacao);
+        avaliacaoParam.setRestaurante(restaurante);
+        avaliacaoParam.setUsuario(usuario);
+        return avaliacaoRepository.save(avaliacaoParam);
     }
 
     public Avaliacao buscarPeloId(Long idAvaliacao) {

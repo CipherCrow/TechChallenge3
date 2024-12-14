@@ -1,6 +1,7 @@
 package br.com.techchallenge.ratatouille.ratatouille.domain.model.service;
 
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegraDeNegocioException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Usuario;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.UsuarioStatusEnum;
 import br.com.techchallenge.ratatouille.ratatouille.infrastructure.persistence.repository.UsuarioRepository;
@@ -56,6 +57,11 @@ public class UsuarioServiceImpl implements UsuarioService{
         Objects.requireNonNull(idUsuario, idNotNull);
 
         Usuario usuario = this.buscarPeloId(idUsuario);
+
+        if(usuario.getStatus() == UsuarioStatusEnum.INATIVO){
+            throw new RegraDeNegocioException("Usuário já está inativado!");
+        }
+
         usuario.setStatus(UsuarioStatusEnum.INATIVO);
         return usuarioRepository.save(usuario);
     }

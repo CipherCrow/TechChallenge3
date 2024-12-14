@@ -33,11 +33,10 @@ public class HorarioServiceImpl implements  HorarioService{
         }
 
         // Associar o restaurante ao horário
-        Horario horario = this.buscarPeloId(horarioParam.getIdHorario());
-        horario.setRestaurante(restaurante);
+        horarioParam.setRestaurante(restaurante);
 
         // Salvar o horário
-        return horarioRepository.save(horario);
+        return horarioRepository.save(horarioParam);
     }
 
     public Horario buscarPeloId(Long idHorario) {
