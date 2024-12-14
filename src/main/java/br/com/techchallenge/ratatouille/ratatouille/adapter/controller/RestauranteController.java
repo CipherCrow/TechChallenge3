@@ -6,6 +6,7 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.RestauranteDTO;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.HorarioMapper;
+import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.LocalizacaoMapper;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.RestauranteMapper;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Horario;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Restaurante;
@@ -37,7 +38,7 @@ public class RestauranteController {
     @PostMapping("/cadastrarRestaurante")
     public ResponseEntity<Object> criarRestaurante(@Valid @RequestBody RestauranteDTO restauranteDTO) {
         try{
-            Restaurante restauranteCadastrado = restauranteService.criar(restauranteDTO);
+            Restaurante restauranteCadastrado = restauranteService.criar(RestauranteMapper.toEntity(restauranteDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(RestauranteMapper.toDTO(restauranteCadastrado));
         }catch(IdJaExistenteException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -71,7 +72,7 @@ public class RestauranteController {
     @GetMapping("/buscarRestaurantePorLocalizacao")
     public ResponseEntity<Object> encontrarRestaurantePorLocalizacao(@Valid @RequestBody LocalizacaoDTO localizacaoDTO) {
         try{
-            List<Restaurante> restaurantesEncontrados = restauranteService.buscarPelaLocalizacao(localizacaoDTO);
+            List<Restaurante> restaurantesEncontrados = restauranteService.buscarPelaLocalizacao(LocalizacaoMapper.toEntity(localizacaoDTO));
             return ResponseEntity.status(HttpStatus.FOUND).body(restaurantesEncontrados);
         }catch(NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -87,8 +88,7 @@ public class RestauranteController {
             Restaurante restauranteAtualizado =
                     restauranteService.atualizarDados(id,
                             restauranteDTO.nome(),
-                            restauranteDTO.tipoDeCozinhaEnum(),
-                            restauranteDTO.localizacao());
+                            restauranteDTO.tipoDeCozinhaEnum());
             return ResponseEntity.status(HttpStatus.OK).body(RestauranteMapper.toDTO(restauranteAtualizado));
         }catch(NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -102,7 +102,7 @@ public class RestauranteController {
                                                        @Valid  @RequestBody LocalizacaoDTO localizacaoDTO) {
         try{
             Restaurante restauranteAtualizado =
-                    restauranteService.atualizarLocalizacao(id,localizacaoDTO);
+                    restauranteService.atualizarLocalizacao(id, LocalizacaoMapper.toEntity(localizacaoDTO)   );
             return ResponseEntity.status(HttpStatus.OK).body(RestauranteMapper.toDTO(restauranteAtualizado));
         }catch(NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -115,7 +115,7 @@ public class RestauranteController {
     public ResponseEntity<Object> adicionarHorario(@PathVariable Long id,
                                                    @Valid @RequestBody HorarioDTO horarioDTO){
         try{
-            Horario horarioAdicionado = horarioService.adicionarHorarioDeFuncionamentoAoRestaurante(id,horarioDTO);
+            Horario horarioAdicionado = horarioService.adicionarHorarioDeFuncionamentoAoRestaurante(id,HorarioMapper.toEntity(horarioDTO));
             return ResponseEntity.status(HttpStatus.OK).body(HorarioMapper.toDTO(horarioAdicionado));
         }catch(NullPointerException | IdJaExistenteException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -140,7 +140,7 @@ public class RestauranteController {
     public ResponseEntity<Object> atualizarHorario(@PathVariable Long id,
                                                    @Valid @RequestBody HorarioDTO horarioDTO){
         try{
-            Horario horarioAtualizado = horarioService.atualizarHorario(id,horarioDTO);
+            Horario horarioAtualizado = horarioService.atualizarHorario(id,HorarioMapper.toEntity(horarioDTO));
             return ResponseEntity.status(HttpStatus.OK).body(HorarioMapper.toDTO(horarioAtualizado));
         }catch(NullPointerException | IdJaExistenteException e){
             return ResponseEntity.badRequest().body(e.getMessage());

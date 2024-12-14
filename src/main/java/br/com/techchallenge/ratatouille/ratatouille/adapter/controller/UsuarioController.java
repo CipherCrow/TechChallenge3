@@ -23,7 +23,7 @@ public class UsuarioController {
     @PostMapping("/criar")
     public ResponseEntity<Object> criarUsuario(@Valid @RequestBody UsuarioDTO usuario) {
         try{
-            Usuario usuarioCriado = usuarioService.criar(usuario);
+            Usuario usuarioCriado = usuarioService.criar(UsuarioMapper.toEntity(usuario));
             return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDTO(usuarioCriado));
         }catch(NullPointerException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -48,7 +48,7 @@ public class UsuarioController {
     public ResponseEntity<Object> atualizarUsuario(@PathVariable Long id,
                                                    @Valid @RequestBody UsuarioDTO usuarioDto) {
         try{
-            Usuario usuarioAtualizado = usuarioService.atualizar(id,usuarioDto);
+            Usuario usuarioAtualizado = usuarioService.atualizar(id,UsuarioMapper.toEntity(usuarioDto));
             return ResponseEntity.status(HttpStatus.OK).body(UsuarioMapper.toDTO(usuarioAtualizado));
         }catch(NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());

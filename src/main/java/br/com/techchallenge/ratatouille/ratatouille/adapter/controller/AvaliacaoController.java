@@ -30,7 +30,7 @@ public class AvaliacaoController {
         try{
             Avaliacao avaliacaoCriada = avaliacaoService.criar(idRestaurante,
                                                                 idUsuario,
-                                                                avaliacaoDTO);
+                                                                AvaliacaoMapper.toEntity(avaliacaoDTO));
             return ResponseEntity.status(HttpStatus.CREATED).
                     body(AvaliacaoMapper.toDTO(avaliacaoCriada));
         }catch(IdJaExistenteException |

@@ -28,7 +28,7 @@ public class ReservaController {
     public ResponseEntity<Object> realizarReserva(@PathVariable Long idHorario,
                                                   @Valid @RequestBody ReservaDTO reservaDTO) {
         try{
-            Reserva reservaCriada = reservaService.adicionarReservaParaHorario(idHorario,reservaDTO);
+            Reserva reservaCriada = reservaService.adicionarReservaParaHorario(idHorario,ReservaMapper.toEntity(reservaDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(ReservaMapper.toDTO(reservaCriada));
         }catch(NullPointerException | RegraDeNegocioException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
