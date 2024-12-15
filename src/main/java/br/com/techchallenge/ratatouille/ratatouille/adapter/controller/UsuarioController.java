@@ -7,6 +7,7 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.UsuarioMapper
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Usuario;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.UsuarioService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/usuario")
+@RequiredArgsConstructor
 public class UsuarioController {
 
     @Autowired
-    UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     @PostMapping("/criar")
     public ResponseEntity<Object> criarUsuario(@Valid @RequestBody UsuarioDTO usuario) {

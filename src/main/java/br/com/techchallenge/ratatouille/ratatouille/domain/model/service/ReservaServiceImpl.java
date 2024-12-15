@@ -42,6 +42,7 @@ public class ReservaServiceImpl implements  ReservaService {
 
         // Associar o horario á reserva
         reservaParam.setHorario(horario);
+        reservaParam.setStatus(StatusReservaEnum.RESERVADO);
 
         Reserva reservaSalva = reservaRepository.save(reservaParam);
 

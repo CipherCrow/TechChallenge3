@@ -1,4 +1,4 @@
-package domain.model.service;
+package br.com.techchallenge.ratatouille.domain.model.service;
 
 
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;

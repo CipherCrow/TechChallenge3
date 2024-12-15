@@ -8,6 +8,7 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.AvaliacaoMapp
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Avaliacao;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.AvaliacaoService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/avaliacao")
+@RequiredArgsConstructor
 public class AvaliacaoController {
 
     @Autowired
-    AvaliacaoService avaliacaoService;
+    private final AvaliacaoService avaliacaoService;
 
     @PostMapping("/avaliar")
     public ResponseEntity<Object> avaliarRestaurante(@RequestParam Long idRestaurante,

@@ -9,6 +9,7 @@ import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Reserv
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.StatusReservaEnum;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.ReservaService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/reserva")
+@RequiredArgsConstructor
 public class ReservaController {
 
     @Autowired
-    ReservaService reservaService;
+    private final ReservaService reservaService;
 
     @PostMapping("/realizarReserva/{idHorario}")
     public ResponseEntity<Object> realizarReserva(@PathVariable Long idHorario,
