@@ -14,6 +14,7 @@ import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.Horario
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.LocalizacaoService;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.RestauranteService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +25,17 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/restaurante")
+@RequiredArgsConstructor
 public class RestauranteController {
 
     @Autowired
-    RestauranteService restauranteService;
+    private final RestauranteService restauranteService;
 
     @Autowired
-    LocalizacaoService localizacaoService;
+    private final LocalizacaoService localizacaoService;
 
     @Autowired
-    HorarioService horarioService;
+    private final HorarioService horarioService;
 
     @PostMapping("/cadastrarRestaurante")
     public ResponseEntity<Object> criarRestaurante(@Valid @RequestBody RestauranteDTO restauranteDTO) {
