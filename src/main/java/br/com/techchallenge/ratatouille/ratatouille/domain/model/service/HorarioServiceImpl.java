@@ -32,8 +32,10 @@ public class HorarioServiceImpl implements  HorarioService{
            throw new IdJaExistenteException("Id do Horario já existente!");
         }
 
+        horarioParam.setIdHorario(null);
         // Associar o restaurante ao horário
         horarioParam.setRestaurante(restaurante);
+        horarioParam.setQtdReservados(0);
 
         // Salvar o horário
         return horarioRepository.save(horarioParam);

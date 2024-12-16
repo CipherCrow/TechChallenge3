@@ -25,9 +25,4 @@ public class Restaurante {
     @Enumerated(EnumType.STRING)
     private TipoDeCozinhaEnum tipoDeCozinha;
 
-    @OneToMany(
-            mappedBy = "restaurante",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private List<Horario> horariosDeFuncionamento;
 }

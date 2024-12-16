@@ -5,6 +5,7 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroN
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegraDeNegocioException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Horario;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Reserva;
+import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Usuario;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.StatusReservaEnum;
 import br.com.techchallenge.ratatouille.ratatouille.infrastructure.persistence.repository.ReservaRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,17 @@ public class ReservaServiceImpl implements  ReservaService {
     @Autowired
     private final HorarioService horarioService;
 
+    @Autowired
+    private final UsuarioService usuarioService;
+
     public Reserva adicionarReservaParaHorario(Long idHorario,Reserva reservaParam) {
         Objects.requireNonNull(idHorario, idNotNull);
 
         // Buscar o Horario
         Horario horario = horarioService.buscarPeloId(idHorario);
+
+        //Buscar o usuario
+        Usuario usuario = usuarioService.buscarPeloId(idHorario);
 
         if(reservaRepository.existsById(reservaParam.getIdReserva())){
             throw new IdJaExistenteException("Id da reserva já existente!");
@@ -41,14 +48,12 @@ public class ReservaServiceImpl implements  ReservaService {
         }
 
         // Associar o horario á reserva
-        reservaParam.setHorario(horario);
+        //reservaParam.setIdReserva(null);
+        reservaParam.setHorario(horarioService.incrementaQuantidadeReservas(horario.getIdHorario()));
         reservaParam.setStatus(StatusReservaEnum.RESERVADO);
+        reservaParam.setCliente(usuario);
 
-        Reserva reservaSalva = reservaRepository.save(reservaParam);
-
-        horarioService.incrementaQuantidadeReservas(horario.getIdHorario());
-
-        return reservaSalva;
+        return reservaRepository.save(reservaParam);
     }
 
     public Reserva buscarPeloId(Long idReserva) {
@@ -70,6 +75,10 @@ public class ReservaServiceImpl implements  ReservaService {
     public List<Reserva> buscarTodasReservasDoHorarioComStatus(Long idHorario, StatusReservaEnum status) {
         Objects.requireNonNull(idHorario, idNotNull);
         Objects.requireNonNull(status, idNotNull);
+
+        if(horarioService.buscarPeloId(idHorario) != null){
+            throw new RegistroNotFoundException("Horario",idHorario);
+        }
 
         return reservaRepository.findReservasByHorario_IdHorarioAndStatus(idHorario, status.name());
     }

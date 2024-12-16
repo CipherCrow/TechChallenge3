@@ -10,6 +10,5 @@ public record RestauranteDTO(
     Long idRestaurante,
     String nome,
     Localizacao localizacao,
-    TipoDeCozinhaEnum tipoDeCozinhaEnum,
-    List<Horario> horariosDeFuncionamento
+    TipoDeCozinhaEnum tipoDeCozinhaEnum
 ){}

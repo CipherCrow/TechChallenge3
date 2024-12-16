@@ -9,6 +9,7 @@ import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.StatusRes
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.HorarioService;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.ReservaServiceImpl;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.RestauranteServiceImpl;
+import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.UsuarioService;
 import br.com.techchallenge.ratatouille.ratatouille.infrastructure.persistence.repository.ReservaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,12 +34,15 @@ class ReservaServiceTest {
     @Mock
     private HorarioService horarioService;
 
+    @Mock
+    private UsuarioService usuarioService;
+
     AutoCloseable openMocks;
 
     @BeforeEach
     void setup(){
         openMocks = MockitoAnnotations.openMocks(this);
-        this.reservaService = new ReservaServiceImpl( reservaRepository, horarioService);
+        this.reservaService = new ReservaServiceImpl( reservaRepository, horarioService, usuarioService);
     }
 
     @AfterEach

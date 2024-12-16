@@ -41,6 +41,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService{
         Restaurante restaurante = restauranteService.buscarPeloId(idRestaurante);
         Usuario usuario = usuarioService.buscarPeloId(idUsuario);
 
+        avaliacaoParam.setIdAvaliacao(null);
         avaliacaoParam.setRestaurante(restaurante);
         avaliacaoParam.setUsuario(usuario);
         return avaliacaoRepository.save(avaliacaoParam);

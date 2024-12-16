@@ -82,6 +82,8 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.OK).body(listaDeReservas);
         }catch(NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (RegistroNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

@@ -14,8 +14,7 @@ public class RestauranteMapper {
                 restaurante.getIdRestaurante(),
                 restaurante.getNome(),
                 restaurante.getLocalizacao(),
-                restaurante.getTipoDeCozinha(),
-                restaurante.getHorariosDeFuncionamento()
+                restaurante.getTipoDeCozinha()
         );
     }
 
@@ -25,8 +24,6 @@ public class RestauranteMapper {
         restaurante.setNome(dto.nome());
         restaurante.setLocalizacao(dto.localizacao());
         restaurante.setTipoDeCozinha(dto.tipoDeCozinhaEnum());
-        restaurante.setHorariosDeFuncionamento(dto.horariosDeFuncionamento());
-
         return restaurante;
     }
 }

@@ -56,7 +56,7 @@ class ReservaControllerTest {
                             .content(asJsonString(reservaDTO)))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.idReserva").value(1L))
-                    .andExpect(jsonPath("$.status").value("RESERVADO"));
+                    .andExpect(jsonPath("$.statusReserva").value(StatusReservaEnum.RESERVADO.name()));
 
             verify(reservaService, times(1)).adicionarReservaParaHorario(eq(1L), any(Reserva.class));
         }
@@ -90,7 +90,7 @@ class ReservaControllerTest {
             mockMvc.perform(get("/reserva/verificarReserva/1"))
                     .andExpect(status().isFound())
                     .andExpect(jsonPath("$.idReserva").value(1L))
-                    .andExpect(jsonPath("$.status").value("RESERVADO"));
+                    .andExpect(jsonPath("$.statusReserva").value("RESERVADO"));
 
             verify(reservaService, times(1)).buscarPeloId(1L);
         }
@@ -101,9 +101,50 @@ class ReservaControllerTest {
 
             mockMvc.perform(get("/reserva/verificarReserva/1"))
                     .andExpect(status().isNotFound())
-                    .andExpect(content().string("Reserva com id 1 não encontrada."));
+                    .andExpect(content().string("Reserva não encontrado com ID: 1"));
 
             verify(reservaService, times(1)).buscarPeloId(1L);
+        }
+
+        @Test
+        void deveBuscarReservasParaHorarioPeloStatus() throws Exception {
+            // Arrange
+            Long idHorario = 1L;
+            StatusReservaEnum status = StatusReservaEnum.RESERVADO;
+
+            List<Reserva> reservasMock = List.of(
+                    new Reserva(1L, status, new Usuario(), new Horario()),
+                    new Reserva(2L, status, new Usuario(), new Horario())
+            );
+
+            when(reservaService.buscarTodasReservasDoHorarioComStatus(idHorario, status))
+                    .thenReturn(reservasMock);
+
+            // Act & Assert
+            mockMvc.perform(get("/reserva/buscarReservasDoHorarioPeloStatus/1", idHorario)
+                            .param("status", status.name()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.length()").value(reservasMock.size()))
+                    .andExpect(jsonPath("$[0].idReserva").value(reservasMock.get(0).getIdReserva()))
+                    .andExpect(jsonPath("$[0].status").value(reservasMock.get(0).getStatus().name()))
+                    .andExpect(jsonPath("$[1].idReserva").value(reservasMock.get(1).getIdReserva()))
+                    .andExpect(jsonPath("$[1].status").value(reservasMock.get(1).getStatus().name()));
+
+            // Verify interactions
+            verify(reservaService, times(1)).buscarTodasReservasDoHorarioComStatus(idHorario, status);
+        }
+
+        @Test
+        void deveRetornarErroAoBuscarReservasParaHorarioInexistenteComStatus() throws Exception {
+            when(reservaService.buscarTodasReservasDoHorarioComStatus(1L, StatusReservaEnum.RESERVADO))
+                    .thenThrow(new RegistroNotFoundException("Horario", 1L));
+
+            mockMvc.perform(get("/reserva/buscarReservasDoHorarioPeloStatus/1")
+                            .param("status", StatusReservaEnum.RESERVADO.name()))
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().string("Horario não encontrado com ID: 1"));
+
+            verify(reservaService, times(1)).buscarTodasReservasDoHorarioComStatus(1L, StatusReservaEnum.RESERVADO);
         }
     }
 
@@ -119,20 +160,78 @@ class ReservaControllerTest {
             mockMvc.perform(delete("/reserva/cancelarReserva/1"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.idReserva").value(1L))
-                    .andExpect(jsonPath("$.status").value("CANCELADA"));
+                    .andExpect(jsonPath("$.statusReserva").value("CANCELADA"));
 
             verify(reservaService, times(1)).cancelarPeloId(1L);
         }
 
         @Test
         void deveRetornarErroAoCancelarReservaInvalida() throws Exception {
-            when(reservaService.cancelarPeloId(1L)).thenThrow(new RegraDeNegocioException("Erro ao cancelar reserva!"));
+            when(reservaService.cancelarPeloId(1L)).thenThrow(new RegraDeNegocioException("Apenas pode se cancelar reservas que estejam RESERVADAS!"));
 
             mockMvc.perform(delete("/reserva/cancelarReserva/1"))
                     .andExpect(status().isBadRequest())
-                    .andExpect(content().string("Erro ao cancelar reserva!"));
+                    .andExpect(content().string("Apenas pode se cancelar reservas que estejam RESERVADAS!"));
 
             verify(reservaService, times(1)).cancelarPeloId(1L);
+        }
+    }
+
+    @Nested
+    class FinalizarReserva {
+
+        @Test
+        void deveFinalizarReservaComSucesso() throws Exception {
+            Reserva reserva = new Reserva(1L, StatusReservaEnum.FINALIZADA, new Usuario(), new Horario());
+
+            when(reservaService.finalizarPeloId(1L)).thenReturn(reserva);
+
+            mockMvc.perform(put("/reserva/finalizarAtendimendoReserva/1"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.idReserva").value(1L))
+                    .andExpect(jsonPath("$.statusReserva").value("FINALIZADA"));
+
+            verify(reservaService, times(1)).finalizarPeloId(1L);
+        }
+
+        @Test
+        void deveRetornarErroAoFinalizarReservaInvalida() throws Exception {
+            when(reservaService.finalizarPeloId(1L)).thenThrow(new RegraDeNegocioException("Apenas podem finalizar reservas que estejam ATIVAS!"));
+
+            mockMvc.perform(put("/reserva/finalizarAtendimendoReserva/1"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().string("Apenas podem finalizar reservas que estejam ATIVAS!"));
+
+            verify(reservaService, times(1)).finalizarPeloId(1L);
+        }
+    }
+
+    @Nested
+    class iniciarAtendimento {
+
+        @Test
+        void deveIniciarReservaComSucesso() throws Exception {
+            Reserva reserva = new Reserva(1L, StatusReservaEnum.ATIVA, new Usuario(), new Horario());
+
+            when(reservaService.iniciarPeloId(1L)).thenReturn(reserva);
+
+            mockMvc.perform(put("/reserva/iniciarAtendimendoReserva/1"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.idReserva").value(1L))
+                    .andExpect(jsonPath("$.statusReserva").value("ATIVA"));
+
+            verify(reservaService, times(1)).iniciarPeloId(1L);
+        }
+
+        @Test
+        void deveRetornarErroAoIniciarReservaInvalida() throws Exception {
+            when(reservaService.iniciarPeloId(1L)).thenThrow(new RegraDeNegocioException("Apenas podem iniciar reservas que estejam RESERVADAS!"));
+
+            mockMvc.perform(put("/reserva/iniciarAtendimendoReserva/1"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().string("Apenas podem iniciar reservas que estejam RESERVADAS!"));
+
+            verify(reservaService, times(1)).iniciarPeloId(1L);
         }
     }
 

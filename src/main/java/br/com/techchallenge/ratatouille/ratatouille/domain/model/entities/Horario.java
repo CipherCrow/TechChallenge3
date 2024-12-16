@@ -40,13 +40,7 @@ public class Horario {
     @Column(nullable = false)
     private int qtdReservados;
 
-    @ManyToOne
-    @JoinColumn(name = "idRestaurante", nullable = false)
+    @OneToOne
     private Restaurante restaurante;
 
-    @OneToMany(
-            mappedBy = "horario",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private List<Reserva> reservas;
 }

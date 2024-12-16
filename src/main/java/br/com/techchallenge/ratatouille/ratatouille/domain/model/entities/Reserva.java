@@ -19,7 +19,7 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     private StatusReservaEnum status;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario")
     private Usuario cliente;
 

@@ -66,20 +66,6 @@ class LocalizacaoServiceTest {
             verify(localizacaoRepository, times(1)).existsById(1L);
             verify(localizacaoRepository, times(1)).save(localizacao);
         }
-
-        @Test
-        void deveLancarExcecaoAoCriarLocalizacaoComIdExistente() {
-            // Arrange
-            Localizacao localizacao = new Localizacao();
-            localizacao.setIdLocalizacao(1L);
-
-            when(localizacaoRepository.existsById(1L)).thenReturn(true);
-
-            // Assert
-            assertThatThrownBy(() -> localizacaoService.criar(localizacao))
-                    .isInstanceOf(IdJaExistenteException.class)
-                    .hasMessage("Id da localizacao já existente!");
-        }
     }
 
     @Nested

@@ -18,10 +18,7 @@ public class LocalizacaoServiceImpl implements LocalizacaoService{
     private final LocalizacaoRepository localizacaoRepository;
 
     public Localizacao criar(Localizacao localizacaoParam) {
-        if (localizacaoRepository.existsById(localizacaoParam.getIdLocalizacao())) {
-            throw new IdJaExistenteException("Id da localizacao já existente!");
-        }
-
+        localizacaoParam.setIdLocalizacao(null);
         return localizacaoRepository.save(localizacaoParam);
     }
 

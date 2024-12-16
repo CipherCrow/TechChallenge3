@@ -29,6 +29,10 @@ public class RestauranteServiceImpl implements RestauranteService{
             throw new IdJaExistenteException("Id do restaurante já existente!");
         }
 
+        restauranteParam.setIdRestaurante(null);
+
+        restauranteParam.setLocalizacao(localizacaoService.criar(restauranteParam.getLocalizacao()));
+
         return restauranteRepository.save(restauranteParam);
     }
 
