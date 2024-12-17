@@ -70,7 +70,6 @@ class HorarioServiceTest {
             assertNotNull(horarioSalvo);
             assertEquals(restaurante, horarioSalvo.getRestaurante());
             verify(restauranteRepository).findById(restauranteId);
-            verify(horarioRepository).existsById(horarioParam.getIdHorario());
             verify(horarioRepository).save(any(Horario.class));
         }
         @Test

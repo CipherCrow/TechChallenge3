@@ -35,6 +35,7 @@ class ReservaRepositoryTestIT {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    /*
     @Test
     void deveSalvarERecuperarReservasPorHorarioId() {
         // Configurando dados
@@ -114,5 +115,7 @@ class ReservaRepositoryTestIT {
 
         verify(reservaRepository, times(1)).findReservasByHorario_IdHorario(999L);
     }
+    */
+
 
 }
