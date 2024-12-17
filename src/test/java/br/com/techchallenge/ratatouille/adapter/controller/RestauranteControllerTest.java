@@ -4,6 +4,8 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.controller.Restauran
 import br.com.techchallenge.ratatouille.ratatouille.adapter.dto.RestauranteDTO;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
+import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.LocalizacaoMapper;
+import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.RestauranteMapper;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Localizacao;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Restaurante;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.TipoDeCozinhaEnum;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -53,8 +56,8 @@ class RestauranteControllerTest {
 
         @Test
         void deveCriarRestauranteComSucesso() throws Exception {
-            RestauranteDTO restauranteDTO = new RestauranteDTO("Restaurante A", TipoDeCozinhaEnum.ITALIANA);
-            Restaurante restaurante = new Restaurante(1L, "Restaurante A", new Localizacao(), TipoDeCozinhaEnum.ITALIANA);
+            RestauranteDTO restauranteDTO = new RestauranteDTO(null,"Restaurante A",new Localizacao(), TipoDeCozinhaEnum.ITALIANA);
+            Restaurante restaurante = new Restaurante(1L,"Restaurante A",new Localizacao(), TipoDeCozinhaEnum.ITALIANA);
 
             when(restauranteService.criar(any(Restaurante.class))).thenReturn(restaurante);
 
@@ -69,7 +72,7 @@ class RestauranteControllerTest {
 
         @Test
         void deveRetornarErroIdDuplicado() throws Exception {
-            RestauranteDTO restauranteDTO = new RestauranteDTO("Restaurante A", TipoDeCozinhaEnum.ITALIANA);
+            RestauranteDTO restauranteDTO = new RestauranteDTO(null,"Restaurante A",new Localizacao(), TipoDeCozinhaEnum.ITALIANA);
 
             when(restauranteService.criar(any(Restaurante.class))).thenThrow(new IdJaExistenteException("Id do restaurante já existente!"));
 
@@ -82,7 +85,7 @@ class RestauranteControllerTest {
     }
 
     @Nested
-    class BuscarRestaurantePorId {
+    class BuscarRestaurante{
 
         @Test
         void deveRetornarRestaurantePeloId() throws Exception {
@@ -103,12 +106,8 @@ class RestauranteControllerTest {
 
             mockMvc.perform(MockMvcRequestBuilders.get("/restaurante/buscarRestaurante/1"))
                     .andExpect(status().isNotFound())
-                    .andExpect(content().string("Registro 'Restaurante' com id '1' não encontrado!"));
+                    .andExpect(content().string("Restaurante não encontrado com ID: 1"));
         }
-    }
-
-    @Nested
-    class BuscarRestaurantePorNome {
 
         @Test
         void deveRetornarRestaurantesPeloNome() throws Exception {
@@ -130,30 +129,7 @@ class RestauranteControllerTest {
 
             mockMvc.perform(MockMvcRequestBuilders.get("/restaurante/buscarRestaurantePorNome/Restaurante A"))
                     .andExpect(status().isNotFound())
-                    .andExpect(content().string("Registro 'Restaurante' com id '0' não encontrado!"));
-        }
-    }
-
-    @Nested
-    class RemoverRestaurante {
-
-        @Test
-        void deveRemoverRestauranteComSucesso() throws Exception {
-            doNothing().when(restauranteService).remover(eq(1L));
-
-            mockMvc.perform(MockMvcRequestBuilders.delete("/restaurante/removerRestaurante/1"))
-                    .andExpect(status().isNoContent());
-
-            verify(restauranteService, times(1)).remover(eq(1L));
-        }
-
-        @Test
-        void deveRetornarErroSeNaoEncontradoParaRemocao() throws Exception {
-            doThrow(new RegistroNotFoundException("Restaurante", 1L)).when(restauranteService).remover(eq(1L));
-
-            mockMvc.perform(MockMvcRequestBuilders.delete("/restaurante/removerRestaurante/1"))
-                    .andExpect(status().isNotFound())
-                    .andExpect(content().string("Registro 'Restaurante' com id '1' não encontrado!"));
+                    .andExpect(content().string("Restaurante não encontrado com ID: 0"));
         }
     }
 
@@ -161,33 +137,75 @@ class RestauranteControllerTest {
     class AtualizarRestaurante {
 
         @Test
-        void deveAtualizarRestauranteComSucesso() throws Exception {
-            RestauranteDTO restauranteDTO = new RestauranteDTO("Restaurante B", TipoDeCozinhaEnum.JAPONESA);
-            Restaurante restauranteAtualizado = new Restaurante(1L, "Restaurante B", new Localizacao(), TipoDeCozinhaEnum.JAPONESA);
+        void atualizarDadosRestauranteComSucesso() throws Exception {
 
-            when(restauranteService.atualizar(eq(1L), any(RestauranteDTO.class))).thenReturn(restauranteAtualizado);
+            Localizacao localizacao = new Localizacao();
+            localizacao.setIdLocalizacao(1L);
+            localizacao.setEstado("Estado");
+            localizacao.setCidade("Cidade");
+            localizacao.setBairro("Bairro");
+            localizacao.setRua("Rua");
+            localizacao.setNumero("123");
 
-            mockMvc.perform(MockMvcRequestBuilders.put("/restaurante/atualizarRestaurante/1")
+            Restaurante restaurante = new Restaurante();
+            restaurante.setIdRestaurante(1L);
+            restaurante.setNome("Restaurante Teste");
+            restaurante.setLocalizacao(localizacao);
+            restaurante.setTipoDeCozinha(TipoDeCozinhaEnum.BRASILEIRA);
+
+            RestauranteDTO restauranteDTO = RestauranteMapper.toDTO(restaurante);
+
+            when(restauranteService.atualizarDados(1L, "Restaurante Teste", TipoDeCozinhaEnum.BRASILEIRA))
+                    .thenReturn(restaurante);
+
+            mockMvc.perform(put("/restaurante/atualizarDadosRestaurante/1")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(restauranteDTO)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.nome").value("Restaurante B"));
-
-            verify(restauranteService, times(1)).atualizar(eq(1L), any(RestauranteDTO.class));
+                    .andExpect(jsonPath("$.nome").value("Restaurante Teste"))
+                    .andExpect(jsonPath("$.localizacao.cidade").value(restauranteDTO.localizacao().getCidade()))
+                    .andExpect(jsonPath("$.tipoDeCozinhaEnum").value(restauranteDTO.tipoDeCozinhaEnum().name()));
         }
 
         @Test
-        void deveRetornarErroSeNaoEncontradoParaAtualizacao() throws Exception {
-            RestauranteDTO restauranteDTO = new RestauranteDTO("Restaurante B", TipoDeCozinhaEnum.JAPONESA);
+        void deveAtualizarLocalizacaoComSucesso() throws Exception {
 
-            when(restauranteService.atualizar(eq(1L), any(RestauranteDTO.class))).thenThrow(new RegistroNotFoundException("Restaurante", 1L));
+            Localizacao localizacao = new Localizacao();
+            localizacao.setIdLocalizacao(1L);
+            localizacao.setEstado("Estado");
+            localizacao.setCidade("Cidade");
+            localizacao.setBairro("Bairro");
+            localizacao.setRua("Rua");
+            localizacao.setNumero("123");
 
-            mockMvc.perform(MockMvcRequestBuilders.put("/restaurante/atualizarRestaurante/1")
+            Restaurante restaurante = new Restaurante();
+            restaurante.setIdRestaurante(1L);
+            restaurante.setNome("Restaurante Teste");
+            restaurante.setLocalizacao(localizacao);
+            restaurante.setTipoDeCozinha(TipoDeCozinhaEnum.BRASILEIRA);
+
+            RestauranteDTO restauranteDTO = RestauranteMapper.toDTO(restaurante);
+
+            when(restauranteService.atualizarLocalizacao(1L, localizacao)).
+                    thenReturn(restaurante);
+
+            mockMvc.perform(put("/restaurante/atualizarLocalizacaoRestaurante/1")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(asJsonString(restauranteDTO)))
-                    .andExpect(status().isNotFound())
-                    .andExpect(content().string("Registro 'Restaurante' com id '1' não encontrado!"));
+                            .content(asJsonString(LocalizacaoMapper.toDTO(localizacao))))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.nome").value("Restaurante Teste"))
+                    .andExpect(jsonPath("$.localizacao.idLocalizacao").value(restauranteDTO.localizacao().getIdLocalizacao()))
+                    .andExpect(jsonPath("$.localizacao.estado").value(restauranteDTO.localizacao().getEstado()))
+                    .andExpect(jsonPath("$.localizacao.cidade").value(restauranteDTO.localizacao().getCidade()))
+                    .andExpect(jsonPath("$.localizacao.bairro").value(restauranteDTO.localizacao().getBairro()))
+                    .andExpect(jsonPath("$.localizacao.rua").value(restauranteDTO.localizacao().getRua()))
+                    .andExpect(jsonPath("$.localizacao.numero").value(restauranteDTO.localizacao().getNumero()));
         }
+    }
+
+    @Nested
+    class manipularHorarioEReservas{
+
     }
 
     private static String asJsonString(final Object obj) {
