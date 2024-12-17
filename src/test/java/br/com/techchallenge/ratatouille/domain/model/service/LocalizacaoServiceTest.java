@@ -63,7 +63,6 @@ class LocalizacaoServiceTest {
             assertThat(localizacaoCriada).isNotNull();
             assertThat(localizacaoCriada.getIdLocalizacao()).isEqualTo(1L);
             assertThat(localizacaoCriada.getCidade()).isEqualTo("São Paulo");
-            verify(localizacaoRepository, times(1)).existsById(1L);
             verify(localizacaoRepository, times(1)).save(localizacao);
         }
     }

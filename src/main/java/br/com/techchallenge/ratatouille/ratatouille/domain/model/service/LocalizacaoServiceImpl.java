@@ -18,7 +18,7 @@ public class LocalizacaoServiceImpl implements LocalizacaoService{
     private final LocalizacaoRepository localizacaoRepository;
 
     public Localizacao criar(Localizacao localizacaoParam) {
-        localizacaoParam.setIdLocalizacao(null);
+        //localizacaoParam.setIdLocalizacao(null);
         return localizacaoRepository.save(localizacaoParam);
     }
 
