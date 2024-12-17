@@ -8,6 +8,8 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.ReservaMapper
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Reserva;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.enums.StatusReservaEnum;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.ReservaService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +20,17 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/reserva")
+@RequiredArgsConstructor
 public class ReservaController {
 
     @Autowired
-    ReservaService reservaService;
+    private final ReservaService reservaService;
 
     @PostMapping("/realizarReserva/{idHorario}")
     public ResponseEntity<Object> realizarReserva(@PathVariable Long idHorario,
-                                                  @RequestBody ReservaDTO reservaDTO) {
+                                                  @Valid @RequestBody ReservaDTO reservaDTO) {
         try{
-            Reserva reservaCriada = reservaService.adicionarReservaParaHorario(idHorario,reservaDTO);
+            Reserva reservaCriada = reservaService.adicionarReservaParaHorario(idHorario,ReservaMapper.toEntity(reservaDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(ReservaMapper.toDTO(reservaCriada));
         }catch(NullPointerException | RegraDeNegocioException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -79,6 +82,8 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.OK).body(listaDeReservas);
         }catch(NullPointerException e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (RegistroNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

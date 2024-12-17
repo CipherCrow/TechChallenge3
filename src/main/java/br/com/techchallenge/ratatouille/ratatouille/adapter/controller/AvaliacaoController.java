@@ -7,6 +7,8 @@ import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegraDeNe
 import br.com.techchallenge.ratatouille.ratatouille.adapter.mapper.AvaliacaoMapper;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Avaliacao;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.service.AvaliacaoService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +19,20 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/avaliacao")
+@RequiredArgsConstructor
 public class AvaliacaoController {
 
     @Autowired
-    AvaliacaoService avaliacaoService;
+    private final AvaliacaoService avaliacaoService;
 
     @PostMapping("/avaliar")
     public ResponseEntity<Object> avaliarRestaurante(@RequestParam Long idRestaurante,
                                                      @RequestParam Long idUsuario,
-                                                     @RequestBody AvaliacaoDTO avaliacaoDTO) {
+                                                     @Valid @RequestBody AvaliacaoDTO avaliacaoDTO) {
         try{
             Avaliacao avaliacaoCriada = avaliacaoService.criar(idRestaurante,
                                                                 idUsuario,
-                                                                avaliacaoDTO);
+                                                                AvaliacaoMapper.toEntity(avaliacaoDTO));
             return ResponseEntity.status(HttpStatus.CREATED).
                     body(AvaliacaoMapper.toDTO(avaliacaoCriada));
         }catch(IdJaExistenteException |
