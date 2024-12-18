@@ -52,15 +52,9 @@ public class HorarioServiceImpl implements  HorarioService{
         Objects.requireNonNull(idHorario, idNotNull);
 
         Horario horario = this.buscarPeloId(idHorario);
-        if(horarioParam.getData() != null){
-            horario.setData(horarioParam.getData());
-        }
-        if(horarioParam.getHoraInicio() != null){
-            horario.setHoraInicio(horarioParam.getHoraInicio());
-        }
-        if(horarioParam.getHoraFim() != null){
-            horario.setHoraFim(horarioParam.getHoraFim());
-        }
+        horario.setData(horarioParam.getData());
+        horario.setHoraInicio(horarioParam.getHoraInicio());
+        horario.setHoraFim(horarioParam.getHoraFim());
 
         return horarioRepository.save(horario);
     }

@@ -1,5 +1,6 @@
 package br.com.techchallenge.ratatouille.domain.model.service;
 
+import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.IdJaExistenteException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.QuantidadeDeReservasException;
 import br.com.techchallenge.ratatouille.ratatouille.adapter.exceptions.RegistroNotFoundException;
 import br.com.techchallenge.ratatouille.ratatouille.domain.model.entities.Horario;
@@ -89,6 +90,24 @@ class HorarioServiceTest {
             verify(restauranteRepository).findById(restauranteId);
             verify(horarioRepository, never()).save(any());
         }
+
+        @Test
+        void deveLancarExcecao_SeRestauranteComIdJaExistir() {
+            // Arrange
+            Long restauranteId = 1L;
+            Horario horarioParam = new Horario();
+            horarioParam.setIdHorario(1L);
+
+            when(restauranteRepository.findById(restauranteId)).thenReturn(Optional.of(new Restaurante()));
+            when(horarioRepository.existsById(horarioParam.getIdHorario())).thenReturn(true);
+            // Assert
+            IdJaExistenteException exception = assertThrows(IdJaExistenteException.class,
+                    () -> horarioService.adicionarHorarioDeFuncionamentoAoRestaurante(restauranteId, horarioParam));
+
+            assertEquals("Id do Horario já existente!", exception.getMessage());
+            verify(restauranteRepository).findById(restauranteId);
+            verify(horarioRepository, never()).save(any());
+        }
     }
 
     @Nested
@@ -142,6 +161,27 @@ class HorarioServiceTest {
         }
 
         @Test
+        void deveAumentarQuantidadeDeReservaMaxima(){
+            // Arrange
+            Long idHorario = 1L;
+            Horario horarioExistente = new Horario();
+            horarioExistente.setIdHorario(idHorario);
+            horarioExistente.setQtdReservados(5);
+            horarioExistente.setEspacosParaReserva(10);
+
+            when(horarioRepository.findById(idHorario)).thenReturn(Optional.of(horarioExistente));
+            when(horarioRepository.save(any(Horario.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            Horario horarioAtualizado = horarioService.atualizarQuantidadeDeReservasMaximas(idHorario, 11);
+
+            assertNotNull(horarioAtualizado);
+            assertEquals(horarioAtualizado.getEspacosParaReserva(),11);
+
+            verify(horarioRepository).findById(idHorario);
+            verify(horarioRepository).save(any(Horario.class));
+        }
+
+        @Test
         void deveIncrementarReservas_ComSucesso() {
             // Arrange
             Long idHorario = 1L;
@@ -160,6 +200,66 @@ class HorarioServiceTest {
             assertEquals(3, horarioAtualizado.getQtdReservados());
             verify(horarioRepository).findById(idHorario);
             verify(horarioRepository).save(any(Horario.class));
+        }
+
+        @Test
+        void deveDecrementarReservas_ComSucesso() {
+            // Arrange
+            Long idHorario = 1L;
+            Horario horarioExistente = new Horario();
+            horarioExistente.setIdHorario(idHorario);
+            horarioExistente.setQtdReservados(2);
+
+            when(horarioRepository.findById(idHorario)).thenReturn(Optional.of(horarioExistente));
+            when(horarioRepository.save(any(Horario.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            // Act
+            Horario horarioAtualizado = horarioService.decrementaQuantidadeReservas(idHorario);
+
+            // Assert
+            assertNotNull(horarioAtualizado);
+            assertEquals(1, horarioAtualizado.getQtdReservados());
+            verify(horarioRepository).findById(idHorario);
+            verify(horarioRepository).save(any(Horario.class));
+        }
+
+    }
+
+    @Nested
+    class deletar{
+        @Test
+        void deveDeletarHorarioComSucesso() {
+            // Arrange
+            Long idHorario = 1L;
+            Horario horarioExistente = new Horario();
+            horarioExistente.setIdHorario(idHorario);
+            horarioExistente.setQtdReservados(0);
+
+            when(horarioRepository.findById(idHorario)).thenReturn(Optional.of(horarioExistente));
+            doNothing().when(horarioRepository).deleteById(idHorario);
+
+            // Act
+            horarioService.deletarPeloId(idHorario);
+
+            // Assert
+            verify(horarioRepository).deleteById(idHorario);
+        }
+        @Test
+        void deveFalharAoDeletarHorarioComReserva() {
+            // Arrange
+            Long idHorario = 1L;
+            Horario horarioExistente = new Horario();
+            horarioExistente.setIdHorario(idHorario);
+            horarioExistente.setQtdReservados(4);
+
+           when(horarioRepository.findById(idHorario)).thenReturn(Optional.of(horarioExistente));
+            QuantidadeDeReservasException exception = assertThrows(QuantidadeDeReservasException.class,
+                    () -> horarioService.deletarPeloId(1L));
+
+            assertEquals("Não é possível deletar horarios que já possuem reservas validas!",
+                    exception.getMessage());
+            verify(horarioRepository).findById(idHorario);
+            verify(horarioRepository, never()).save(any(Horario.class));
         }
     }
 }
