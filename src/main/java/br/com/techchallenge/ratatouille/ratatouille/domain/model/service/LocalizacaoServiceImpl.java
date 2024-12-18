@@ -33,21 +33,11 @@ public class LocalizacaoServiceImpl implements LocalizacaoService{
         Objects.requireNonNull(localizacaoParam.getIdLocalizacao(), idNotNull);
 
         Localizacao localizacao = this.buscarPeloId(localizacaoParam.getIdLocalizacao());
-        if(localizacaoParam.getRua() != null){
-            localizacao.setRua(localizacaoParam.getRua());
-        }
-        if(localizacaoParam.getCidade() != null){
-            localizacao.setCidade(localizacaoParam.getCidade());
-        }
-        if(localizacaoParam.getEstado() != null){
-            localizacao.setEstado(localizacaoParam.getEstado());
-        }
-        if(localizacaoParam.getNumero() != null){
-            localizacao.setNumero(localizacaoParam.getNumero());
-        }
-        if(localizacaoParam.getBairro() != null){
-            localizacao.setBairro(localizacaoParam.getBairro());
-        }
+        localizacao.setRua(localizacaoParam.getRua());
+        localizacao.setCidade(localizacaoParam.getCidade());
+        localizacao.setEstado(localizacaoParam.getEstado());
+        localizacao.setNumero(localizacaoParam.getNumero());
+        localizacao.setBairro(localizacaoParam.getBairro());
 
         return localizacaoRepository.save(localizacao);
     }

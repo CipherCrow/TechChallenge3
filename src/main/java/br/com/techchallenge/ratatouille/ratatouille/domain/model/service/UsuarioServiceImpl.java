@@ -35,18 +35,10 @@ public class UsuarioServiceImpl implements UsuarioService{
         Objects.requireNonNull(idUsuario, idNotNull);
 
         Usuario usuario = this.buscarPeloId(idUsuario);
-        if (usuarioParametro.getNome() != null){
-            usuario.setNome(usuarioParametro.getNome());
-        }
-        if (usuarioParametro.getEmail() != null){
-            usuario.setEmail(usuarioParametro.getEmail());
-        }
-        if(usuarioParametro.getIdade() != null ){
-            usuario.setIdade(usuarioParametro.getIdade());
-        }
-        if(usuarioParametro.getSexo() != null ){
-            usuario.setSexo(usuarioParametro.getSexo());
-        }
+        usuario.setNome(usuarioParametro.getNome());
+        usuario.setEmail(usuarioParametro.getEmail());
+        usuario.setIdade(usuarioParametro.getIdade());
+        usuario.setSexo(usuarioParametro.getSexo());
         return usuarioRepository.save(usuario);
     }
 

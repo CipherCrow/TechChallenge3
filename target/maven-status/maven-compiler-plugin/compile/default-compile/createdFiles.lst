@@ -2,7 +2,6 @@ br\com\techchallenge\ratatouille\ratatouille\adapter\mapper\AvaliacaoMapper.clas
 br\com\techchallenge\ratatouille\ratatouille\infrastructure\persistence\repository\HorarioRepository.class
 br\com\techchallenge\ratatouille\ratatouille\domain\model\service\LocalizacaoServiceImpl.class
 br\com\techchallenge\ratatouille\ratatouille\domain\model\service\RestauranteServiceImpl.class
-br\com\techchallenge\ratatouille\ratatouille\adapter\exceptions\CampoObrigatorioNuloException.class
 br\com\techchallenge\ratatouille\ratatouille\adapter\mapper\RestauranteMapper.class
 br\com\techchallenge\ratatouille\ratatouille\domain\model\entities\Horario$HorarioBuilder.class
 br\com\techchallenge\ratatouille\ratatouille\domain\model\entities\Usuario.class

@@ -21,6 +21,7 @@ br\com\techchallenge\ratatouille\domain\model\service\ReservaServiceTest$Cancela
 br\com\techchallenge\ratatouille\ratatouille\infrastructure\persistence\repository\RestauranteRepositoryTest.class
 br\com\techchallenge\ratatouille\domain\model\service\ReservaServiceTest.class
 br\com\techchallenge\ratatouille\domain\model\service\UsuarioServiceTest.class
+br\com\techchallenge\ratatouille\domain\model\service\HorarioServiceTest$deletar.class
 br\com\techchallenge\ratatouille\domain\model\service\LocalizacaoServiceTest.class
 br\com\techchallenge\ratatouille\adapter\controller\ReservaControllerTest.class
 br\com\techchallenge\ratatouille\domain\model\service\UsuarioServiceTest$buscarUsuario.class
