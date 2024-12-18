@@ -9,7 +9,6 @@ br\com\techchallenge\ratatouille\adapter\controller\RestauranteControllerTest$Cr
 br\com\techchallenge\ratatouille\adapter\controller\UsuarioControllerTest$CriarUsuario.class
 br\com\techchallenge\ratatouille\domain\model\service\HorarioServiceTest$criarHorario.class
 br\com\techchallenge\ratatouille\domain\model\service\RestauranteServiceTest$AtualizarDadosRestaurante.class
-br\com\techchallenge\ratatouille\ratatouille\infrastructure\persistence\repository\ReservaRepositoryTestIT.class
 br\com\techchallenge\ratatouille\adapter\controller\UsuarioControllerTest$AtualizarUsuario.class
 br\com\techchallenge\ratatouille\adapter\controller\AvaliacaoControllerTest$criarAvaliacao.class
 br\com\techchallenge\ratatouille\domain\model\service\ReservaServiceTest$FinalizarPeloId.class
@@ -34,7 +33,6 @@ br\com\techchallenge\ratatouille\domain\model\service\ReservaServiceTest$BuscarP
 br\com\techchallenge\ratatouille\adapter\controller\ReservaControllerTest$FinalizarReserva.class
 br\com\techchallenge\ratatouille\adapter\controller\UsuarioControllerTest$DeletarUsuario.class
 br\com\techchallenge\ratatouille\domain\model\service\RestauranteServiceTest.class
-br\com\techchallenge\ratatouille\ratatouille\infrastructure\persistence\repository\UsuarioRepositoryTestIT.class
 br\com\techchallenge\ratatouille\ratatouille\infrastructure\persistence\repository\AvaliacaoRepositoryTest.class
 br\com\techchallenge\ratatouille\domain\model\service\ReservaServiceTest$AdicionarReservaParaHorario.class
 br\com\techchallenge\ratatouille\domain\model\service\RestauranteServiceTest$BuscarRestaurante.class

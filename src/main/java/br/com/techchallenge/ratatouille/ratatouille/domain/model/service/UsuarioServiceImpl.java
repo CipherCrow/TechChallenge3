@@ -20,7 +20,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     public Usuario criar(Usuario usuarioParametro) {
         //usuarioParametro.setIdUsuario(null);
-        usuarioParametro.setStatus(UsuarioStatusEnum.ATIVO);
+         usuarioParametro.setStatus(UsuarioStatusEnum.ATIVO);
          return usuarioRepository.save(usuarioParametro);
     }
 
